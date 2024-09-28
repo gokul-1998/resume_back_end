@@ -9,16 +9,16 @@ from app import models, oauth2, schemas
 router = APIRouter (tags=['Authentication'])
 
 
-@router.post("/login/")
-def login(user: dict):
-    return {"message": f"User {user['username']} logged in!"}
+# @router.post("/login/")
+# def login(user: dict):
+#     return {"message": f"User {user['username']} logged in!"}
 
 # @router.post("/register/")
 # def register(user: dict):
 #     return {"message": f"User {user['username']} registered successfully!"}
 
 
-router.post('/login', response_model=schemas.token)
+@router.post('/login', response_model=schemas.token)
 def login(user_credentials:schemas.LoginRequest,db: Session = Depends(database.get_db)):
 
     User = db.query(models.User).filter(models.User.email == user_credentials.email).first()
@@ -32,7 +32,7 @@ def login(user_credentials:schemas.LoginRequest,db: Session = Depends(database.g
 
     access_token = oauth2.create_access_token(data ={"employee_id": User.id})
 
-    return {"access_token": access_token, "Token_type": "bearer"}
+    return {"access_token": access_token, "token_type": "bearer"}
 
 
 
