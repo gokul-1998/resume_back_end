@@ -8,7 +8,6 @@ router = APIRouter()
 class User(BaseModel):
     name: str
     email: str
-    department: str
     password: str
 
 # Define a GET route to fetch user data
