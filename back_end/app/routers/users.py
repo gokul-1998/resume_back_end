@@ -15,8 +15,8 @@ class User(BaseModel):
 def get_users():
     return [{"user_id": 1, "name": "John Doe"}, {"user_id": 2, "name": "Jane Doe"}]
 
-# Define a POST route to create a user
-@router.post("/users/")
-def create_user(user: User):
-    # Here you can implement logic to save the user to the database
-    return {"message": f"User {user.name} created successfully!", "user": user}
+# # Define a POST route to create a user
+# @router.post("/users/")
+# def create_user(user: User):
+#     # Here you can implement logic to save the user to the database
+#     return {"message": f"User {user.name} created successfully!", "user": user}
