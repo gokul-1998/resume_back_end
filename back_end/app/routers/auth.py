@@ -32,7 +32,7 @@ def login(user_credentials:schemas.LoginRequest,db: Session = Depends(database.g
 
     access_token = oauth2.create_access_token(data ={"employee_id": User.id})
 
-    return {"access_token": access_token, "token_type": "bearer"}
+    return {"access_token": access_token, "token_type": "bearer","username": User.name}
 
 
 

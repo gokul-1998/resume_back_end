@@ -27,6 +27,7 @@ class usercreate(BaseModel):
 class token(BaseModel):
     access_token: str
     token_type: str
+    username: str
 
 class LoginRequest(BaseModel):
     email: str
@@ -34,3 +35,13 @@ class LoginRequest(BaseModel):
 
 class TokenData(BaseModel):
     id: Optional[str] = None
+
+class User(BaseModel):
+    id: int
+    name: str
+    email: str
+    created_at: datetime
+    resumes: List[Resume] = []
+
+    class Config:
+        orm_mode = True
