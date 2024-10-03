@@ -25,6 +25,10 @@ app.add_middleware(
 # Create all the database tables
 models.Base.metadata.create_all(bind=engine)
 
+@app.get("/test")
+def root():
+    return {"message": "Hello World"}
+
 # Include the routers
 app.include_router(users.router)  # Users router
 app.include_router(resumes.router)  # Resumes router
