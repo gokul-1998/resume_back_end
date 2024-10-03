@@ -9,7 +9,8 @@ app = FastAPI()
 
 origins = [
     "http://localhost:5173",  # Your frontend origin
-    "http://127.0.0.1:8000",  # Alternative frontend origin
+    "https://cv7.netlify.app",  # Main frontend domain
+    "https://deploy-preview-*--cv7.netlify.app",  # Wildcard for all deploy previews on Netlify
 ]
 
 app.add_middleware(
