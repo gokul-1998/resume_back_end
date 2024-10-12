@@ -1,4 +1,5 @@
 # schemas.py
+import json
 from pydantic import BaseModel
 from datetime import datetime
 from typing import List, Optional
@@ -41,6 +42,7 @@ class User(BaseModel):
     name: str
     email: str
     created_at: datetime
+    profile: Optional[dict]
     resumes: List[Resume] = []
 
     class Config:

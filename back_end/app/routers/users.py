@@ -1,4 +1,5 @@
 # routers/users.py
+import json
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from sqlalchemy.orm import Session 
@@ -6,7 +7,7 @@ from .. import models, schemas, database
 from fastapi import Depends
 from typing import List
 
-router = APIRouter()
+router = APIRouter(tags=['Users'])
 
 # Define a Pydantic model for User
 class User(BaseModel):
@@ -27,6 +28,20 @@ def get_user(username: str, db: Session = Depends(database.get_db)):
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     return user
+
+
+@router.put("/users/{username}", response_model=schemas.User)
+def update_profile(username: str, profile:schemas.ResumeCreate, db: Session = Depends(database.get_db)):
+    user_db = db.query(models.User).filter(models.User.name == username).first()
+    if not user_db:
+        raise HTTPException(status_code=404, detail="User not found")
+    user_db.profile = json.dumps(profile.dict())
+    db.commit()
+    db.refresh(user_db)
+    user_db.profile = json.loads(user_db.profile)
+
+    
+    return user_db
 
 # # Define a POST route to create a user
 # @router.post("/users/")
