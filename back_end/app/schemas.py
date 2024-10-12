@@ -13,6 +13,9 @@ class ResumeBase(BaseModel):
 class ResumeCreate(ResumeBase):
     pass
 
+class Profile(BaseModel):
+    profile:dict
+
 class Resume(ResumeBase):
     id: int
     created_at: datetime
@@ -42,7 +45,7 @@ class User(BaseModel):
     name: str
     email: str
     created_at: datetime
-    profile: Optional[dict]
+    profile: str
     resumes: List[Resume] = []
 
     class Config:
