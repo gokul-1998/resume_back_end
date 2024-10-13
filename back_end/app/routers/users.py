@@ -1,4 +1,5 @@
 # routers/users.py
+from datetime import datetime
 import json
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
@@ -30,15 +31,27 @@ def get_user(username: str, db: Session = Depends(database.get_db)):
     return user
 
 
+from datetime import datetime
+import json
+
 @router.put("/users/{username}", response_model=schemas.User)
-def update_profile(username: str, profile:schemas.Profile, db: Session = Depends(database.get_db)):
+def update_profile(username: str, profile: schemas.Profile, db: Session = Depends(database.get_db)):
     user_db = db.query(models.User).filter(models.User.name == username).first()
     if not user_db:
         raise HTTPException(status_code=404, detail="User not found")
-    user_db.profile = json.dumps(profile.dict())
+    
+    profile = profile.dict()
+    profile['updated_at'] = datetime.utcnow().isoformat()  # Convert datetime to ISO format string
+    
+    print(type(profile))    
+    
+    profile = json.dumps(profile)  # Now, it should be JSON serializable
+    user_db.profile = profile
+    
     db.commit()
     db.refresh(user_db)
     return user_db
+
 
 # # Define a POST route to create a user
 # @router.post("/users/")
