@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-router = APIRouter()
+router = APIRouter(tags=['Resumes'], prefix="/api")
 
 @router.get("/resumes/")
 def get_resumes():
