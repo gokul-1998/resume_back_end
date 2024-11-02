@@ -1,5 +1,5 @@
 # routers/users.py
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, status
 from pydantic import BaseModel
 from sqlalchemy.orm import Session 
 from .. import models, schemas, database
@@ -36,6 +36,15 @@ def check_user(email: str, db: Session = Depends(database.get_db)):
         raise HTTPException(status_code=409, detail="User already exists")
     else:
         return {"message": "User does not exist"}
+
+# define a get method to check if username is available
+@router.get("/users/check-name/{name}")
+def check_name_availability(name: str, db: Session = Depends(database.get_db)):
+    user = db.query(models.User).filter(models.User.name == name).first()
+    if user:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Name is already taken.")
+    return {"available": True}
+
 
 
 # # Define a POST route to create a user
