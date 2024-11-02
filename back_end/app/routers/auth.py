@@ -35,6 +35,7 @@ def login(user_credentials:schemas.LoginRequest,db: Session = Depends(database.g
     return {"access_token": access_token, "token_type": "bearer","username": User.name}
 
 
+from sqlalchemy.exc import IntegrityError
 
 @router.post("/register/", status_code=status.HTTP_201_CREATED)
 def register(user: schemas.usercreate, db: Session = Depends(database.get_db)):
@@ -46,5 +47,9 @@ def register(user: schemas.usercreate, db: Session = Depends(database.get_db)):
         db.commit()
         db.refresh(new_user)
         return new_user
+    except IntegrityError as e:
+        db.rollback()  # Rollback in case of integrity error
+        raise HTTPException(status_code=400, detail="User with this email already exists.")
     except Exception as e:
-        raise e
+        db.rollback()  # General rollback in case of any other exception
+        raise HTTPException(status_code=500, detail="An error occurred during registration.")
