@@ -1,0 +1,42 @@
+import requests
+
+API_URL = "https://api-inference.huggingface.co/models/meta-llama/Llama-3.2-1B"
+headers = {"Authorization": "Bearer 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"}
+import requests
+
+
+def query(payload):
+    try:
+        response = requests.post(API_URL, headers=headers, json=payload)
+        response.raise_for_status()  # Raise exception for HTTP errors
+        return response.json()  # Return the JSON response
+    except requests.exceptions.HTTPError as http_err:
+        print(f"HTTP error occurred: {http_err}")
+    except Exception as err:
+        print(f"An error occurred: {err}")
+    return None  # Return None in case of error
+
+def rephrase_for_resume(sentence):
+    prompt = f"Rephrase the following sentence in a professional tone for a resume: '{sentence}' with plus or minus 3 words than the given sentence."
+    
+    output = query({"inputs": prompt})
+    
+    if output:  # Check if the response is not None
+        try:
+            # Check if 'generated_text' exists in the first element
+            return output[0]['generated_text'] if isinstance(output, list) and 'generated_text' in output[0] else "Error: Rephrasing failed"
+        except (KeyError, IndexError) as e:
+            print(f"Error accessing rephrased text: {e}")
+    else:
+        print("Error: No response from the API")
+    
+    return "Error in rephrasing"
+
+# Get user input
+user_sentence = "AI based resume creation portal wrt to provided jd"
+# Rephrase the sentence
+rephrased_sentence = rephrase_for_resume(user_sentence)
+
+# Output the rephrased sentence
+print("Rephrased sentence for your resume:")
+print(rephrased_sentence)
